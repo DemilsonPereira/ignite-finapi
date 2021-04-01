@@ -9,6 +9,21 @@ const PORT = 3333;
 
 const customers = [];
 
+// FUNÇÃO MIDDLEWARE
+function verifyIfExistsAccountCPF(req, res, next) {
+  const { cpf } = req.headers;
+
+  const customer = customers.find((customer) => customer.cpf === cpf);
+
+  if (!customer) {
+    return res.status(400).json({ message: "Customer not found" });
+  }
+
+  req.customer = customer;
+
+  return next();
+}
+
 app.post("/account", (req, res) => {
   const { cpf, name } = req.body;
 
@@ -30,16 +45,27 @@ app.post("/account", (req, res) => {
   return res.status(201).send();
 });
 
-app.get('/statement/:cpf', (req, res) => {
-    const { cpf } = req.params;
+app.get("/statement", verifyIfExistsAccountCPF, (req, res) => {
+  const { customer } = req;
 
-    const customer = customers.find(customer => customer.cpf === cpf)
+  return res.json(customer.statement);
+});
 
-    if(!customer){
-        return res.status(400).json({ message: "Customer not found"})
+app.post("/deposit", verifyIfExistsAccountCPF, (req, res) => {
+    const { description, amount } = req.body;
+
+    const { customer } = req;
+
+    const statementOperation = {
+        description,
+        amount,
+        created_at: new Date(),
+        type: 'Credit'
     }
 
-    return res.json(customer.statement);
+    customer.statement.push(statementOperation);
+
+    return res.status(201).send();
 });
 
 app.listen(PORT, () => {
