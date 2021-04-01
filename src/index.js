@@ -85,8 +85,8 @@ app.post("/withdraw", verifyIfExistsAccountCPF, (req, res) => {
 
   const balance = getBalance(customer.statement);
 
-  if(balance < amount){
-      return res.status(400).json({ message: "Insufficient funds!"})
+  if (balance < amount) {
+    return res.status(400).json({ message: "Insufficient funds!" });
   }
 
   const statementOperation = {
@@ -98,19 +98,37 @@ app.post("/withdraw", verifyIfExistsAccountCPF, (req, res) => {
   customer.statement.push(statementOperation);
 
   return res.status(201).send();
-
 });
 
 app.get("/statement/date", verifyIfExistsAccountCPF, (req, res) => {
-    const { customer } = req;
-    const { date } = req.query;
+  const { customer } = req;
+  const { date } = req.query;
 
-    const dateFormat = new Date(date + " 00:00");
+  const dateFormat = new Date(date + " 00:00");
 
-    const statement = customer.statement.filter((statement) => statement.created_at.toDateString() === new Date(dateFormat).toDateString());
-  
-    return res.json(statement);
-  });
+  const statement = customer.statement.filter(
+    (statement) =>
+      statement.created_at.toDateString() ===
+      new Date(dateFormat).toDateString()
+  );
+
+  return res.json(statement);
+});
+
+app.put("/account", verifyIfExistsAccountCPF, (req, res) => {
+  const { name } = req.body;
+  const { customer } = req;
+
+  customer.name = name;
+
+  return res.status(201).send();
+});
+
+app.get("/account", verifyIfExistsAccountCPF, (req, res) => {
+  const { customer } = req;
+
+  return res.json(customer);
+});
 
 app.listen(PORT, () => {
   console.log(`Rodando em http://localhost:${PORT}`);
