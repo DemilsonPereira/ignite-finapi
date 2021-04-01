@@ -9,8 +9,8 @@
 - [x] Deve ser possível buscar o extrato bancário do cliente por data
 - [x] Deve ser possível atualizar dados da conta do cliente
 - [x] Deve ser possível obter dados da conta do cliente
-- [] Deve ser possível deletar uma conta
-- [] Deve ser possível retornar o balance
+- [x] Deve ser possível deletar uma conta
+- [x] Deve ser possível retornar o balance
 
 ## Regras de negócio
 
@@ -19,4 +19,4 @@
 - [x] não deve ser possível fazer depósito em uma conta não existente
 - [x] não deve ser possível fazer saque em uma conta não existente
 - [x] não deve ser possível fazer saque quando o saldo for insuficiente
-- [] não deve ser possível excluir uma conta não existente
+- [x] não deve ser possível excluir uma conta não existente
